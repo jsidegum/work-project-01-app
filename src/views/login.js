@@ -44,7 +44,7 @@ const Login = () => {
 
                 <div className="d-flex justify-content-center">
                     <Form.Text className="text-muted">
-                        <a href="#">Cadastre-se</a>
+                        <a href="/cadastrar-usuario">Cadastre-se</a>
                     </Form.Text>
                 </div>
             </Form>

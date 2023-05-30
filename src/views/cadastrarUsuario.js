@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import CenteredCard from '../components/card';
 
 const CadastrarUsuario = () => {
+
+    const navigate = useNavigate();
 
     const [nome, setNome] = useState('');
     const [email, setEmail] = useState('');
@@ -14,6 +17,10 @@ const CadastrarUsuario = () => {
         console.log('Email:', email);
         console.log('Senha:', senha);
         console.log('Confirmar Senha:', confirmarSenha);
+    };
+
+    const cancelar = () => {
+        navigate('/');
     };
 
     return (
@@ -62,7 +69,7 @@ const CadastrarUsuario = () => {
                 <Button variant="primary" onClick={cadastrar}>
                     Salvar
                 </Button>
-                <Button variant="secondary" className="ml-2" onClick={() => { }}>
+                <Button variant="secondary" className="ml-2" onClick={cancelar}>
                     Cancelar
                 </Button>
             </Form>
