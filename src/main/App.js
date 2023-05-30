@@ -1,20 +1,18 @@
 
 import React from 'react';
-import Rotas from './rotas'
-
-// import Login from '../views/login';
-// import CadastrarUsuario from '../views/cadastrarUsuario';
+import Rotas from './rotas';
+import Header from '../components/header';
+import Footer from '../components/footer';
 
 
 function App() {
   return (
 
     <div className="App">
-      <>
-        <Rotas />
-        {/* <Login />
-        <CadastrarUsuario /> */}
-      </>
+
+      <Header />
+      <Rotas />
+      <Footer />
 
     </div>
   );
