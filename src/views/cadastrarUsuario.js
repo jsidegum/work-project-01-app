@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import CenteredCard from '../components/card';
-import DOMPurify from 'dompurify'; // Importando a biblioteca DOMPurify
+import DOMPurify from 'dompurify';
+import ModalAlert from '../components/modalAlert';
 
 
 const CadastrarUsuario = () => {
@@ -11,15 +12,35 @@ const CadastrarUsuario = () => {
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
     const [confirmarSenha, setConfirmarSenha] = useState('');
+    const [showModal, setShowModal] = useState(false);
+    const [mensagemModal, setMensagemModal] = useState('');
 
     const navigate = useNavigate();
-
     const nomeSanitizado = DOMPurify.sanitize(nome); //Testar: <script>alert('Teste ataque XSS!');</script>
 
     const cadastrar = () => {
 
         if (nomeSanitizado !== nome) {
-            alert('O valor do campo Nome contém conteúdo malicioso.');
+            setMensagemModal('O valor do campo Nome contém conteúdo malicioso.');
+            setShowModal(true);
+            return;
+        }
+
+        if (nome === '' || email === '' || senha === '' || confirmarSenha === '') {
+            setMensagemModal('Por favor, preencha todos os campos.');
+            setShowModal(true);
+            return;
+        }
+
+        if (!isValidEmail(email)) {
+            setMensagemModal('O email digitado não é válido.');
+            setShowModal(true);
+            return;
+        }
+
+        if (senha !== confirmarSenha) {
+            setMensagemModal('A senha e a confirmação de senha devem ser iguais.');
+            setShowModal(true);
             return;
         }
 
@@ -31,6 +52,15 @@ const CadastrarUsuario = () => {
 
     const cancelar = () => {
         navigate('/');
+    };
+
+    const handleCloseModal = () => {
+        setShowModal(false);
+    };
+
+    const isValidEmail = (email) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
     };
 
     return (
@@ -83,6 +113,15 @@ const CadastrarUsuario = () => {
                     Cancelar
                 </Button>
             </Form>
+
+            {showModal && (
+                <ModalAlert
+                    titulo="Dados incorretos"
+                    mensagem={mensagemModal}
+                    handleClose={handleCloseModal}
+                />
+            )}
+
         </CenteredCard>
     );
 };
