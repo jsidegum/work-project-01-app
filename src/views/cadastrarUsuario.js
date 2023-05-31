@@ -2,18 +2,28 @@ import React, { useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import CenteredCard from '../components/card';
+import DOMPurify from 'dompurify'; // Importando a biblioteca DOMPurify
+
 
 const CadastrarUsuario = () => {
-
-    const navigate = useNavigate();
 
     const [nome, setNome] = useState('');
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
     const [confirmarSenha, setConfirmarSenha] = useState('');
 
+    const navigate = useNavigate();
+
+    const nomeSanitizado = DOMPurify.sanitize(nome); //Testar: <script>alert('Teste ataque XSS!');</script>
+
     const cadastrar = () => {
-        console.log('Nome:', nome);
+
+        if (nomeSanitizado !== nome) {
+            alert('O valor do campo Nome contém conteúdo malicioso.');
+            return;
+        }
+
+        console.log('Nome:', nomeSanitizado);
         console.log('Email:', email);
         console.log('Senha:', senha);
         console.log('Confirmar Senha:', confirmarSenha);
