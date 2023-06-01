@@ -4,9 +4,11 @@ import Login from '../views/login';
 import CadastrarUsuario from '../views/cadastrarUsuario';
 import Home from '../views/home';
 
-const isUsuarioAutenticado = false; // provisorio
-
 const Rotas = () => {
+
+    //const isUsuarioAutenticado = true;
+    const isUsuarioAutenticado = localStorage.getItem('_usuario_logado');
+
     return (
         <Router>
             <Routes>
