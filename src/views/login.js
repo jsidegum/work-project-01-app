@@ -1,15 +1,44 @@
 import React, { useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import CenteredCard from '../components/card';
+import axios from 'axios';
+import ModalAlert from '../components/modalAlert';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
 
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
+    const [showModalAlert, setShowModalAlert] = useState(false);
+    const [mensagemModalAlert, setMensagemModalAlert] = useState('');
 
-    const entrar = () => {
+    const navigate = useNavigate();
+
+    const handleCloseModalAlert = () => {
+        setShowModalAlert(false);
+    };
+
+    const entrar = async () => {
+
         console.log('Email:', email);
         console.log('Senha:', senha);
+
+        const data = {
+            email: email,
+            senha: senha
+        };
+
+        axios.post('http://localhost:8080/auth', data)
+            .then(response => {
+                console.log(response);
+                localStorage.setItem('_usuario_logado', JSON.stringify(response.data));
+                navigate('/home');
+            })
+            .catch(error => {
+                setMensagemModalAlert(error.message);
+                setShowModalAlert(true);
+            });
+
     };
 
     return (
@@ -48,6 +77,14 @@ const Login = () => {
                     </Form.Text>
                 </div>
             </Form>
+
+            {showModalAlert && (
+                <ModalAlert
+                    mensagem={mensagemModalAlert}
+                    handleClose={handleCloseModalAlert}
+                />
+            )}
+
         </CenteredCard>
     );
 };

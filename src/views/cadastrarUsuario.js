@@ -4,7 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import CenteredCard from '../components/card';
 import DOMPurify from 'dompurify';
 import ModalAlert from '../components/modalAlert';
-
+import ModalSuccess from '../components/modalSuccess';
+import axios from 'axios';
 
 const CadastrarUsuario = () => {
 
@@ -12,55 +13,84 @@ const CadastrarUsuario = () => {
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
     const [confirmarSenha, setConfirmarSenha] = useState('');
-    const [showModal, setShowModal] = useState(false);
-    const [mensagemModal, setMensagemModal] = useState('');
+
+    const [showModalAlert, setShowModalAlert] = useState(false);
+    const [mensagemModalAlert, setMensagemModalAlert] = useState('');
+
+    const [showModalSuccess, setShowModalSuccess] = useState(false);
+    const [mensagemModalSuccess, setMensagemModalSuccess] = useState('');
 
     const navigate = useNavigate();
     const nomeSanitizado = DOMPurify.sanitize(nome); //Testar: <script>alert('Teste ataque XSS!');</script>
 
-    const cadastrar = () => {
+    const isValidEmail = (email) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    };
 
+    const validarCampos = () => {
         if (nomeSanitizado !== nome) {
-            setMensagemModal('O valor do campo Nome contém conteúdo malicioso.');
-            setShowModal(true);
-            return;
+            setMensagemModalAlert('O valor do campo Nome contém conteúdo malicioso.');
+            setShowModalAlert(true);
+            return false;
         }
 
         if (nome === '' || email === '' || senha === '' || confirmarSenha === '') {
-            setMensagemModal('Por favor, preencha todos os campos.');
-            setShowModal(true);
-            return;
+            setMensagemModalAlert('Por favor, preencha todos os campos.');
+            setShowModalAlert(true);
+            return false;
         }
 
         if (!isValidEmail(email)) {
-            setMensagemModal('O email digitado não é válido.');
-            setShowModal(true);
-            return;
+            setMensagemModalAlert('O email digitado não é válido.');
+            setShowModalAlert(true);
+            return false;
         }
 
         if (senha !== confirmarSenha) {
-            setMensagemModal('A senha e a confirmação de senha devem ser iguais.');
-            setShowModal(true);
+            setMensagemModalAlert('A senha e a confirmação de senha devem ser iguais.');
+            setShowModalAlert(true);
+            return false;
+        }
+        return true;
+    };
+
+    const cadastrar = () => {
+
+        if (!validarCampos()) {
             return;
         }
 
-        console.log('Nome:', nomeSanitizado);
-        console.log('Email:', email);
-        console.log('Senha:', senha);
-        console.log('Confirmar Senha:', confirmarSenha);
+        const data = {
+            nameLogin: nomeSanitizado,
+            passwordLogin: senha,
+            emailLogin: email,
+        };
+
+        axios.post('http://localhost:8080/userRegister/postUser', data)
+            .then(response => {
+                //console.log(response);
+                setMensagemModalSuccess(response.data);
+                setShowModalSuccess(true);
+            })
+            .catch(error => {
+                setMensagemModalAlert(error.message);
+                setShowModalAlert(true);
+            });
+
     };
 
     const cancelar = () => {
         navigate('/');
     };
 
-    const handleCloseModal = () => {
-        setShowModal(false);
+    const handleCloseModalAlert = () => {
+        setShowModalAlert(false);
     };
 
-    const isValidEmail = (email) => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
+    const handleCloseModalSuccess = () => {
+        setShowModalSuccess(false);
+        navigate('/');
     };
 
     return (
@@ -114,11 +144,17 @@ const CadastrarUsuario = () => {
                 </Button>
             </Form>
 
-            {showModal && (
+            {showModalAlert && (
                 <ModalAlert
-                    titulo="Dados incorretos"
-                    mensagem={mensagemModal}
-                    handleClose={handleCloseModal}
+                    mensagem={mensagemModalAlert}
+                    handleClose={handleCloseModalAlert}
+                />
+            )}
+
+            {showModalSuccess && (
+                <ModalSuccess
+                    mensagem={mensagemModalSuccess}
+                    handleClose={handleCloseModalSuccess}
                 />
             )}
 
