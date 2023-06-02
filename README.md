@@ -13,6 +13,7 @@ A API relacionada a este projeto está disponível em: [https://github.com/DaviB
 - Bootstrap
 - DOMPurify
 - Axios
+- Crypto-js
 
 ## Screenshots
 
