@@ -62,12 +62,12 @@ const CadastrarUsuario = () => {
         }
 
         const data = {
-            nameLogin: nomeSanitizado,
-            passwordLogin: senha,
-            emailLogin: email,
+            name: nomeSanitizado,
+            password: senha,
+            email: email,
         };
 
-        axios.post('http://localhost:8080/userRegister/postUser', data)
+        axios.post('http://localhost:8080/userData/register', data)
             .then(response => {
                 //console.log(response);
                 setMensagemModalSuccess(response.data);
