@@ -6,6 +6,7 @@ import DOMPurify from 'dompurify';
 import ModalAlert from '../components/modalAlert';
 import ModalSuccess from '../components/modalSuccess';
 import axios from 'axios';
+import { aesUtil } from '../crypto/AESUtil';
 
 const CadastrarUsuario = () => {
 
@@ -19,6 +20,9 @@ const CadastrarUsuario = () => {
 
     const [showModalSuccess, setShowModalSuccess] = useState(false);
     const [mensagemModalSuccess, setMensagemModalSuccess] = useState('');
+
+    const hashedEmail = aesUtil.encrypt("banana", email);
+    const hashedSenha = aesUtil.encrypt("banana", senha);
 
     const navigate = useNavigate();
     const nomeSanitizado = DOMPurify.sanitize(nome); //Testar: <script>alert('Teste ataque XSS!');</script>
@@ -63,13 +67,15 @@ const CadastrarUsuario = () => {
 
         const data = {
             name: nomeSanitizado,
-            password: senha,
-            email: email,
+            password: hashedSenha,
+            email: hashedEmail,
         };
+
+        console.log(data);
 
         axios.post('http://localhost:8080/userData/register', data)
             .then(response => {
-                //console.log(response);
+                console.log(response);
                 setMensagemModalSuccess(response.data);
                 setShowModalSuccess(true);
             })
