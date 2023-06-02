@@ -4,16 +4,22 @@ import CenteredCard from '../components/card';
 import axios from 'axios';
 import ModalAlert from '../components/modalAlert';
 import { useNavigate } from 'react-router-dom';
+import { aesUtil } from '../crypto/AESUtil';
 
 const Login = () => {
 
     const url = process.env.REACT_APP_URL;
+    const key = process.env.REACT_APP_KEY;
+
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
     const [showModalAlert, setShowModalAlert] = useState(false);
     const [mensagemModalAlert, setMensagemModalAlert] = useState('');
 
     const navigate = useNavigate();
+
+    const hashedEmail = aesUtil.encrypt(key, email);
+    const hashedSenha = aesUtil.encrypt(key, senha);
 
     const handleCloseModalAlert = () => {
         setShowModalAlert(false);
@@ -22,9 +28,11 @@ const Login = () => {
     const entrar = async () => {
 
         const data = {
-            email: email,
-            password: senha
+            email: hashedEmail,
+            password: hashedSenha
         };
+
+        console.log(data)
 
         axios.post(url + '/userData/auth', data)
             .then(response => {
