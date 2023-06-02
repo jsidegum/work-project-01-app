@@ -20,22 +20,19 @@ const Login = () => {
 
     const entrar = async () => {
 
-        console.log('Email:', email);
-        console.log('Senha:', senha);
-
         const data = {
             email: email,
-            senha: senha
+            password: senha
         };
 
-        axios.post('http://localhost:8080/auth', data)
+        axios.post('http://localhost:8080/userData/auth', data)
             .then(response => {
-                console.log(response);
                 localStorage.setItem('_usuario_logado', JSON.stringify(response.data));
                 navigate('/home');
+                window.location.reload();
             })
             .catch(error => {
-                setMensagemModalAlert(error.message);
+                setMensagemModalAlert(error.response.data);
                 setShowModalAlert(true);
             });
 
