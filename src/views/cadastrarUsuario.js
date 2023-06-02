@@ -10,6 +10,9 @@ import { aesUtil } from '../crypto/AESUtil';
 
 const CadastrarUsuario = () => {
 
+    const url = process.env.REACT_APP_URL;
+    const key = process.env.REACT_APP_KEY;
+
     const [nome, setNome] = useState('');
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
@@ -21,8 +24,8 @@ const CadastrarUsuario = () => {
     const [showModalSuccess, setShowModalSuccess] = useState(false);
     const [mensagemModalSuccess, setMensagemModalSuccess] = useState('');
 
-    const hashedEmail = aesUtil.encrypt("banana", email);
-    const hashedSenha = aesUtil.encrypt("banana", senha);
+    const hashedEmail = aesUtil.encrypt(key, email);
+    const hashedSenha = aesUtil.encrypt(key, senha);
 
     const navigate = useNavigate();
     const nomeSanitizado = DOMPurify.sanitize(nome); //Testar: <script>alert('Teste ataque XSS!');</script>
@@ -71,11 +74,9 @@ const CadastrarUsuario = () => {
             email: hashedEmail,
         };
 
-        console.log(data);
-
-        axios.post('http://localhost:8080/userData/register', data)
+        axios.post(url + '/userData/register', data)
             .then(response => {
-                console.log(response);
+                //console.log(response);
                 setMensagemModalSuccess(response.data);
                 setShowModalSuccess(true);
             })

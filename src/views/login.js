@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
 
+    const url = process.env.REACT_APP_URL;
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
     const [showModalAlert, setShowModalAlert] = useState(false);
@@ -25,7 +26,7 @@ const Login = () => {
             password: senha
         };
 
-        axios.post('http://localhost:8080/userData/auth', data)
+        axios.post(url + '/userData/auth', data)
             .then(response => {
                 localStorage.setItem('_usuario_logado', JSON.stringify(response.data));
                 navigate('/home');
