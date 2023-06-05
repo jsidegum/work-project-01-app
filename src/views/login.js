@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, InputGroup, FormControl } from 'react-bootstrap';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import CenteredCard from '../components/card';
 import axios from 'axios';
 import ModalAlert from '../components/modalAlert';
@@ -7,7 +8,6 @@ import { useNavigate } from 'react-router-dom';
 import { aesUtil } from '../crypto/AESUtil';
 
 const Login = () => {
-
     const url = process.env.REACT_APP_URL;
     const key = process.env.REACT_APP_KEY;
 
@@ -15,6 +15,7 @@ const Login = () => {
     const [senha, setSenha] = useState('');
     const [showModalAlert, setShowModalAlert] = useState(false);
     const [mensagemModalAlert, setMensagemModalAlert] = useState('');
+    const [passwordVisible, setPasswordVisible] = useState(false);
 
     const navigate = useNavigate();
 
@@ -26,15 +27,15 @@ const Login = () => {
     };
 
     const entrar = async () => {
-
         const data = {
             email: hashedEmail,
             password: hashedSenha
         };
 
-        console.log(data)
+        console.log(data);
 
-        axios.post(url + '/userData/auth', data)
+        axios
+            .post(url + '/userData/auth', data)
             .then(response => {
                 localStorage.setItem('_usuario_logado', JSON.stringify(response.data));
                 navigate('/home');
@@ -44,7 +45,10 @@ const Login = () => {
                 setMensagemModalAlert(error.response.data);
                 setShowModalAlert(true);
             });
+    };
 
+    const togglePasswordVisibility = () => {
+        setPasswordVisible(!passwordVisible);
     };
 
     return (
@@ -56,18 +60,29 @@ const Login = () => {
                         type="email"
                         placeholder="Digite o login"
                         value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        onChange={e => setEmail(e.target.value)}
                     />
                 </Form.Group>
 
                 <Form.Group controlId="formBasicPassword">
-                    <Form.Label>Senha</Form.Label>
-                    <Form.Control
-                        type="password"
-                        placeholder="Digite a senha"
-                        value={senha}
-                        onChange={(e) => setSenha(e.target.value)}
-                    />
+                    <Form.Label>
+                        Senha
+                        <InputGroup>
+                            <FormControl
+                                type={passwordVisible ? 'text' : 'password'}
+                                placeholder="Digite a senha"
+                                value={senha}
+                                onChange={e => setSenha(e.target.value)}
+                            />
+                            <InputGroup.Text onClick={togglePasswordVisibility}>
+                                {passwordVisible ? (
+                                    <FaEyeSlash />
+                                ) : (
+                                    <FaEye />
+                                )}
+                            </InputGroup.Text>
+                        </InputGroup>
+                    </Form.Label>
                 </Form.Group>
 
                 <br />
@@ -85,12 +100,10 @@ const Login = () => {
             </Form>
 
             {showModalAlert && (
-                <ModalAlert
-                    mensagem={mensagemModalAlert}
-                    handleClose={handleCloseModalAlert}
-                />
+                <ModalAlert 
+					mensagem={mensagemModalAlert} 
+					handleClose={handleCloseModalAlert} />
             )}
-
         </CenteredCard>
     );
 };
