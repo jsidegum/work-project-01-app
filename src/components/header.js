@@ -1,11 +1,11 @@
 import React from 'react';
-import { Navbar, Container, Button } from 'react-bootstrap';
-
+import { Navbar, Container } from 'react-bootstrap';
+import { IoLogOutOutline } from 'react-icons/io5';
 
 const Header = () => {
-
     const handleLogout = () => {
         localStorage.removeItem('_usuario_logado');
+        window.location.reload();
         console.log("Logout realizado com sucesso!");
     };
 
@@ -16,9 +16,15 @@ const Header = () => {
             <Container>
                 <Navbar.Brand className="text-white text-center py-3" href="/">Meu App</Navbar.Brand>
                 {usuarioLogado && (
-                    <Button onClick={handleLogout} variant="danger" className="ml-auto" href="/sair">
-                        Sair
-                    </Button>
+                    <div style={{ color: 'white' }}>
+                        {usuarioLogado.replace(/['"]+/g, ' ')}
+                        <IoLogOutOutline
+                            size={28}
+                            onClick={handleLogout}
+                            className="ml-auto text-white"
+                            style={{ cursor: 'pointer' }}
+                        />
+                    </div>
                 )}
             </Container>
         </Navbar>
