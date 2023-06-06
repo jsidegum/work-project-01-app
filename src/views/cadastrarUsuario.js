@@ -54,6 +54,15 @@ const CadastrarUsuario = () => {
             return false;
         }
 
+        // Verificar a força da senha
+        const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()\-_=+[{\]};:<>|./?]).{8,}$/;
+
+        if (!strongPasswordRegex.test(senha)) {
+            setMensagemModalAlert('A senha deve conter pelo menos 8 caracteres, incluindo letras maiúsculas, minúsculas, números e caracteres especiais.');
+            setShowModalAlert(true);
+            return false;
+        }
+
         if (senha !== confirmarSenha) {
             setMensagemModalAlert('A senha e a confirmação de senha devem ser iguais.');
             setShowModalAlert(true);
