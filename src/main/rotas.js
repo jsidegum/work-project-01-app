@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Login from '../views/login';
 import CadastrarUsuario from '../views/cadastrarUsuario';
 import Home from '../views/home';
+import CadastrarContatos from '../views/contatos/cadastrarContatos';
 
 const Rotas = () => {
 
@@ -14,6 +15,8 @@ const Rotas = () => {
             <Routes>
 
                 {/* Independentes de autenticação */}
+                <Route exact path="/cadastrar-contatos" element={<CadastrarContatos />} />
+
                 <Route exact path="/" element={<Login />} />
                 <Route exact path="/cadastrar-usuario" element={<CadastrarUsuario />} />
 

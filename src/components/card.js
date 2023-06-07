@@ -3,8 +3,8 @@ import { Card } from 'react-bootstrap';
 
 const CenteredCard = (props) => {
     return (
-        <div className="d-flex justify-content-center align-items-center vh-100">
-            <Card style={{ width: '18rem' }}>
+        <div className="d-flex justify-content-center align-items-center vh-100 pt-22">
+            <Card style={{ width: props.width || '18rem' }}>
                 <Card.Body>
                     <Card.Title>{props.title}</Card.Title>
                     {props.children}
