@@ -111,7 +111,7 @@ const CadastrarContato = () => {
     }
 
     const cancelar = () => {
-        navigate('/');
+        navigate('/home');
     };
 
     const handleCloseModalAlert = () => {

@@ -24,11 +24,12 @@ const CadastrarUsuario = () => {
     const [showModalSuccess, setShowModalSuccess] = useState(false);
     const [mensagemModalSuccess, setMensagemModalSuccess] = useState('');
 
-    const hashedEmail = aesUtil.encrypt(key, email);
-    const hashedSenha = aesUtil.encrypt(key, senha);
-
     const navigate = useNavigate();
     const nomeSanitizado = DOMPurify.sanitize(nome); //Testar: <script>alert('Teste ataque XSS!');</script>
+
+    const hashedEmail = aesUtil.encrypt(key, email);
+    const hashedSenha = aesUtil.encrypt(key, senha);
+    const hashedName = aesUtil.encrypt(key, nomeSanitizado);
 
     const isValidEmail = (email) => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -78,12 +79,12 @@ const CadastrarUsuario = () => {
         }
 
         const data = {
-            name: nomeSanitizado,
+            name: hashedName,
             password: hashedSenha,
             email: hashedEmail,
         };
 
-        axios.post(url + '/userData/register', data)
+        axios.post(url + '/userData', data)
             .then(response => {
                 //console.log(response);
                 setMensagemModalSuccess(response.data);
