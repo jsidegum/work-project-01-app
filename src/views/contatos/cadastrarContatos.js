@@ -2,6 +2,11 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CenteredCard from '../../components/card';
 import { Form, Row, Col, Button } from 'react-bootstrap';
+import ModalAlert from '../../components/modalAlert';
+import InputMask from 'react-input-mask';
+import SelectMenu from '../../components/selectMenu';
+import DOMPurify from 'dompurify';
+
 
 const CadastrarContato = () => {
     const [contato, setContato] = useState('');
@@ -15,14 +20,102 @@ const CadastrarContato = () => {
     const [cidade, setCidade] = useState('');
     const [estado, setEstado] = useState('');
 
+    const contatoSanitizado = DOMPurify.sanitize(contato); //Testar: <script>alert('Teste ataque XSS!');</script>
+    const telefoneSanitizado = DOMPurify.sanitize(telefone);
+    const emailSanitizado = DOMPurify.sanitize(email);
+    const cepSanitizado = DOMPurify.sanitize(cep);
+    const logradouroSanitizado = DOMPurify.sanitize(logradouro);
+    const numeroSanitizado = DOMPurify.sanitize(numero);
+    const complementoSanitizado = DOMPurify.sanitize(complemento);
+    const bairroSanitizado = DOMPurify.sanitize(bairro);
+    const cidadeSanitizado = DOMPurify.sanitize(cidade);
+
+    const listaEstados = [
+        { value: 'teste', label: 'Selecione' },
+        { value: 'AC', label: 'Acre' },
+        { value: 'AL', label: 'Alagoas' },
+        { value: 'AP', label: 'Amapá' },
+        { value: 'AM', label: 'Amazonas' },
+        { value: 'BA', label: 'Bahia' },
+        { value: 'CE', label: 'Ceará' },
+        { value: 'DF', label: 'Distrito Federal' },
+        { value: 'ES', label: 'Espírito Santo' },
+        { value: 'GO', label: 'Goiás' },
+        { value: 'MA', label: 'Maranhão' },
+        { value: 'MT', label: 'Mato Grosso' },
+        { value: 'MS', label: 'Mato Grosso do Sul' },
+        { value: 'MG', label: 'Minas Gerais' },
+        { value: 'PA', label: 'Pará' },
+        { value: 'PB', label: 'Paraíba' },
+        { value: 'PR', label: 'Paraná' },
+        { value: 'PE', label: 'Pernambuco' },
+        { value: 'PI', label: 'Piauí' },
+        { value: 'RJ', label: 'Rio de Janeiro' },
+        { value: 'RN', label: 'Rio Grande do Norte' },
+        { value: 'RS', label: 'Rio Grande do Sul' },
+        { value: 'RO', label: 'Rondônia' },
+        { value: 'RR', label: 'Roraima' },
+        { value: 'SC', label: 'Santa Catarina' },
+        { value: 'SP', label: 'São Paulo' },
+        { value: 'SE', label: 'Sergipe' },
+        { value: 'TO', label: 'Tocantins' },
+    ];
+
+    const [showModalAlert, setShowModalAlert] = useState(false);
+    const [mensagemModalAlert, setMensagemModalAlert] = useState('');
+
     const navigate = useNavigate();
+
+    const isValidEmail = (email) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    };
+
+    const validarCampos = () => {
+
+        if (contatoSanitizado !== contato ||
+            telefoneSanitizado !== telefone ||
+            emailSanitizado !== email ||
+            cepSanitizado !== cepSanitizado ||
+            logradouroSanitizado !== logradouro ||
+            numeroSanitizado !== numero ||
+            complementoSanitizado !== complemento ||
+            bairroSanitizado !== bairro ||
+            cidadeSanitizado !== cidade) {
+            setMensagemModalAlert('Campo(s) com conteúdo malicioso.');
+            setShowModalAlert(true);
+            return false;
+        }
+
+        if (contato === '' || telefone === '' || email === '') {
+            setMensagemModalAlert('Por favor, preencha os campos obrigatórios: Contato, Telefone e Email');
+            setShowModalAlert(true);
+            return false;
+        }
+
+        if (!isValidEmail(email)) {
+            setMensagemModalAlert('O email digitado não é válido.');
+            setShowModalAlert(true);
+            return false;
+        }
+
+    }
 
     const cadastrar = () => {
         console.log(contato, telefone, email, cep, logradouro, numero, complemento, bairro, cidade, estado);
+
+        if (!validarCampos()) {
+            return;
+        }
+
     }
 
     const cancelar = () => {
         navigate('/');
+    };
+
+    const handleCloseModalAlert = () => {
+        setShowModalAlert(false);
     };
 
     return (
@@ -30,10 +123,10 @@ const CadastrarContato = () => {
             <Form>
                 <Row>
                     <Form.Group as={Col} xs={12} sm={12} controlId="formContato">
-                        <Form.Label>Contato</Form.Label>
+                        <Form.Label>Contato *</Form.Label>
                         <Form.Control
                             type="text"
-                            placeholder="Nome do contato"
+                            placeholder="Contato"
                             value={contato}
                             onChange={(e) => setContato(e.target.value)}
                         />
@@ -42,17 +135,18 @@ const CadastrarContato = () => {
                 </Row>
 
                 <Row>
-                    <Form.Group as={Col} xs={12} sm={3} controlId="formTelefone">
-                        <Form.Label>Telefone</Form.Label>
-                        <Form.Control
-                            type="text"
+                    <Form.Group as={Col} xs={12} sm={4} controlId="formTelefone">
+                        <Form.Label>Telefone *</Form.Label>
+                        <InputMask
+                            className="form-control"
+                            mask="(99) 99999-9999"
                             placeholder="Telefone"
                             value={telefone}
                             onChange={(e) => setTelefone(e.target.value)}
                         />
                     </Form.Group>
-                    <Form.Group as={Col} xs={12} sm={9} controlId="formEmail">
-                        <Form.Label>Email</Form.Label>
+                    <Form.Group as={Col} xs={12} sm={8} controlId="formEmail">
+                        <Form.Label>Email *</Form.Label>
                         <Form.Control
                             type="email"
                             placeholder="Email"
@@ -65,8 +159,9 @@ const CadastrarContato = () => {
                 <Row>
                     <Form.Group as={Col} xs={12} sm={3} controlId="formCep">
                         <Form.Label>CEP</Form.Label>
-                        <Form.Control
-                            type="text"
+                        <InputMask
+                            className="form-control"
+                            mask="99999-999"
                             placeholder="CEP"
                             value={cep}
                             onChange={(e) => setCep(e.target.value)}
@@ -88,9 +183,13 @@ const CadastrarContato = () => {
                             type="text"
                             placeholder="N°"
                             value={numero}
-                            onChange={(e) => setNumero(e.target.value)}
+                            onChange={(e) => {
+                                const numericValue = e.target.value.replace(/\D/g, ''); // Remove todos os caracteres não numéricos
+                                setNumero(numericValue);
+                            }}
                         />
                     </Form.Group>
+
                 </Row>
 
                 <Row>
@@ -115,7 +214,7 @@ const CadastrarContato = () => {
                 </Row>
 
                 <Row>
-                    <Form.Group as={Col} xs={12} sm={10} controlId="formCidade">
+                    <Form.Group as={Col} xs={12} sm={6} controlId="formCidade">
                         <Form.Label>Cidade</Form.Label>
                         <Form.Control
                             type="text"
@@ -124,16 +223,13 @@ const CadastrarContato = () => {
                             onChange={(e) => setCidade(e.target.value)}
                         />
                     </Form.Group>
-                    <Form.Group as={Col} xs={12} sm={2} controlId="formEstado">
+                    <Form.Group as={Col} xs={12} sm={6} controlId="formEstado">
                         <Form.Label>Estado</Form.Label>
-                        <Form.Control
-                            type="text"
-                            placeholder="Estado"
-                            value={estado}
-                            onChange={(e) => setEstado(e.target.value)}
-                        />
+                        <SelectMenu lista={listaEstados} value={estado} onChange={(e) => setEstado(e.target.value)} />
                     </Form.Group>
+
                 </Row>
+
                 <br />
                 <Row>
                     <Col xs={12}>
@@ -146,6 +242,14 @@ const CadastrarContato = () => {
                     </Col>
                 </Row>
             </Form>
+
+            {showModalAlert && (
+                <ModalAlert
+                    mensagem={mensagemModalAlert}
+                    handleClose={handleCloseModalAlert}
+                />
+            )}
+
         </CenteredCard>
     );
 };
