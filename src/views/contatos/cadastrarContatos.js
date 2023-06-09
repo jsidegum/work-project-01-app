@@ -6,9 +6,13 @@ import ModalAlert from '../../components/modalAlert';
 import InputMask from 'react-input-mask';
 import SelectMenu from '../../components/selectMenu';
 import DOMPurify from 'dompurify';
-
+import axios from 'axios';
+import ModalSuccess from '../../components/modalSuccess';
 
 const CadastrarContato = () => {
+
+    const url = process.env.REACT_APP_URL;
+
     const [contato, setContato] = useState('');
     const [telefone, setTelefone] = useState('');
     const [email, setEmail] = useState('');
@@ -19,6 +23,12 @@ const CadastrarContato = () => {
     const [bairro, setBairro] = useState('');
     const [cidade, setCidade] = useState('');
     const [estado, setEstado] = useState('');
+
+    const [showModalAlert, setShowModalAlert] = useState(false);
+    const [mensagemModalAlert, setMensagemModalAlert] = useState('');
+
+    const [showModalSuccess, setShowModalSuccess] = useState(false);
+    const [mensagemModalSuccess, setMensagemModalSuccess] = useState('');
 
     const contatoSanitizado = DOMPurify.sanitize(contato); //Testar: <script>alert('Teste ataque XSS!');</script>
     const telefoneSanitizado = DOMPurify.sanitize(telefone);
@@ -61,14 +71,24 @@ const CadastrarContato = () => {
         { value: 'TO', label: 'Tocantins' },
     ];
 
-    const [showModalAlert, setShowModalAlert] = useState(false);
-    const [mensagemModalAlert, setMensagemModalAlert] = useState('');
-
     const navigate = useNavigate();
 
     const isValidEmail = (email) => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
+    };
+
+    const handleCloseModalSuccess = () => {
+        setShowModalSuccess(false);
+        navigate('/home');
+    };
+
+    const cancelar = () => {
+        navigate('/home');
+    };
+
+    const handleCloseModalAlert = () => {
+        setShowModalAlert(false);
     };
 
     const validarCampos = () => {
@@ -99,24 +119,49 @@ const CadastrarContato = () => {
             return false;
         }
 
+        return true;
+
     }
 
     const cadastrar = () => {
-        console.log(contato, telefone, email, cep, logradouro, numero, complemento, bairro, cidade, estado);
 
         if (!validarCampos()) {
             return;
         }
 
+        const data = {
+            user: 1, //provisório
+            name: contatoSanitizado,
+            cellphone: telefoneSanitizado,
+            email: emailSanitizado,
+            address: {
+                user: 1, //provisório
+                zipCode: cepSanitizado,
+                streetAddress: logradouroSanitizado,
+                buildingNumber: numeroSanitizado,
+                complement: complementoSanitizado,
+                district: bairroSanitizado,
+                city: cidadeSanitizado,
+                region: estado,
+            }
+
+        };
+
+        console.log(data);
+
+        axios.post(url + '/contacts/1', data) //provisório
+            .then(response => {
+                console.log(response);
+                // setMensagemModalSuccess(response.data);
+                setMensagemModalSuccess("Contato cadastrado com sucesso!"); //provisório
+                setShowModalSuccess(true);
+            })
+            .catch(error => {
+                //console.log(error);
+                setMensagemModalAlert(error.message);
+                setShowModalAlert(true);
+            });
     }
-
-    const cancelar = () => {
-        navigate('/home');
-    };
-
-    const handleCloseModalAlert = () => {
-        setShowModalAlert(false);
-    };
 
     return (
         <CenteredCard width="40rem" title="Cadastrar Contato">
@@ -247,6 +292,13 @@ const CadastrarContato = () => {
                 <ModalAlert
                     mensagem={mensagemModalAlert}
                     handleClose={handleCloseModalAlert}
+                />
+            )}
+
+            {showModalSuccess && (
+                <ModalSuccess
+                    mensagem={mensagemModalSuccess}
+                    handleClose={handleCloseModalSuccess}
                 />
             )}
 
