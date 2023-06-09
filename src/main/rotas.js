@@ -11,25 +11,46 @@ const Rotas = () => {
     const isUsuarioAutenticado = localStorage.getItem('_usuario_logado');
 
     return (
-        <Router>
-            <Routes>
+        <div className="rotas-container">
 
-                {/* Independentes de autenticação */}
-                <Route exact path="/" element={<Login />} />
-                <Route exact path="/cadastrar-usuario" element={<CadastrarUsuario />} />
+            <Router>
+                <Routes>
+                    {/* Independentes de autenticação */}
+                    <Route exact path="/" element={<Login />} />
+                    <Route exact path="/cadastrar-usuario" element={<CadastrarUsuario />} />
 
-                {/* Dependentes de autenticação */}
-                {isUsuarioAutenticado ? (
-                    <>
-                        <Route exact path="/cadastrar-contatos" element={<CadastrarContatos />} />
-                        <Route exact path="/home" element={<Home />} />
-                    </>
-                ) : (
-                    <Route path="/*" element={<Navigate to="/" />} />
-                )}
+                    {/* Dependentes de autenticação */}
+                    {isUsuarioAutenticado ? (
+                        <>
+                            <Route exact path="/cadastrar-contatos" element={<CadastrarContatos />} />
+                            <Route exact path="/home" element={<Home />} />
+                        </>
+                    ) : (
+                        <Route path="/*" element={<Navigate to="/" />} />
+                    )}
 
-            </Routes>
-        </Router >
+                </Routes>
+            </Router >
+
+            <style>
+                {`
+                    @media screen and (max-width: 675px) {
+                        .rotas-container {
+                            padding-top: 105px;
+                            padding-bottom: 80px;
+                        }
+                    }
+
+                    @media screen and (max-width: 375px) {
+                        .rotas-container {
+                            padding-top: 200px;
+                            padding-bottom: 180px;
+                        }
+                    }
+                `}
+            </style>
+
+        </div>
     );
 };
 
