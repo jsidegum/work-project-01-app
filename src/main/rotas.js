@@ -4,6 +4,7 @@ import Login from '../views/login';
 import CadastrarUsuario from '../views/cadastrarUsuario';
 import Home from '../views/home';
 import CadastrarContatos from '../views/contatos/cadastrarContatos';
+import ConsultarContatos from '../views/contatos/consultarContatos';
 
 const Rotas = () => {
 
@@ -16,6 +17,7 @@ const Rotas = () => {
                 {/* Independentes de autenticação */}
                 <Route exact path="/" element={<Login />} />
                 <Route exact path="/cadastrar-usuario" element={<CadastrarUsuario />} />
+                <Route exact path="/consultar-contatos" element={<ConsultarContatos />} />
 
                 {/* Dependentes de autenticação */}
                 {isUsuarioAutenticado ? (

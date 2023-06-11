@@ -21,7 +21,7 @@ const Header = () => {
                             <>
                                 <Nav.Link className="text-white" href="/home">Home</Nav.Link>
                                 <Nav.Link className="text-white" href="/cadastrar-usuario">Usuários</Nav.Link>
-                                <Nav.Link className="text-white" href="/cadastrar-contatos">Contatos</Nav.Link>
+                                <Nav.Link className="text-white" href="/consultar-contatos">Contatos</Nav.Link>
                                 <Nav.Link className="text-white" onClick={handleLogout}>Sair</Nav.Link>
                             </>
                         )}
