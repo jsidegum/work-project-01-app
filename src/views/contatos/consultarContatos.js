@@ -7,21 +7,31 @@ import { FaEdit, FaTrash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
 const data = [
-    { id: 1, contato: 'João Henrique da Silva', telefone: '(99)9999-9999', email: 'joaohenriquesilva@email.com.br' },
-    { id: 2, contato: 'Maria Pereira', telefone: '(99)9999-9999', email: 'email@email.com.br' },
-    { id: 3, contato: 'Pedro', telefone: '(99)9999-9999', email: 'email@email.com.br' },
-    { id: 4, contato: 'Ana', telefone: '(99)9999-9999', email: 'email@email.com.br' },
-    { id: 5, contato: 'Lucas', telefone: '(99)9999-9999', email: 'email@email.com.br' },
-    { id: 6, contato: 'Joana', telefone: '(99)9999-9999', email: 'email@email.com.br' },
-    { id: 7, contato: 'Mario', telefone: '(99)9999-9999', email: 'email@email.com.br' },
-    { id: 8, contato: 'Paulo', telefone: '(99)9999-9999', email: 'email@email.com.br' },
-    { id: 9, contato: 'Alan', telefone: '(99)9999-9999', email: 'email@email.com.br' },
-    { id: 10, contato: 'Brian', telefone: '(99)9999-9999', email: 'email@email.com.br' },
-    { id: 11, contato: 'Celso', telefone: '(99)9999-9999', email: 'email@email.com.br' },
-    { id: 12, contato: 'Eduardo', telefone: '(99)9999-9999', email: 'email@email.com.br' },
-    { id: 13, contato: 'Felipe', telefone: '(99)9999-9999', email: 'email@email.com.br' },
-    { id: 14, contato: 'Jonas', telefone: '(99)9999-9999', email: 'email@email.com.br' },
-    { id: 15, contato: 'Jane', telefone: '(99)9999-9999', email: 'email@email.com.br' },
+    { id: 1, contato: 'Alice Mendes da Silva', telefone: '(11)12345-6789', email: 'alice.mendes.silva@example.com' },
+    { id: 2, contato: 'Gabriel Santos Oliveira', telefone: '(22)98765-4321', email: 'gabriel.santos.oliveira@example.com' },
+    { id: 3, contato: 'Sofia Costa Pereira', telefone: '(33)24680-1357', email: 'sofia.costa.pereira@example.com' },
+    { id: 4, contato: 'Lucas Almeida Ribeiro', telefone: '(44)86420-9753', email: 'lucas.almeida.ribeiro@example.com' },
+    { id: 5, contato: 'Isabella Ferreira Souza', telefone: '(55)13579-0246', email: 'isabella.ferreira.souza@example.com' },
+    { id: 6, contato: 'Enzo Cardoso Rocha', telefone: '(66)97531-8642', email: 'enzo.cardoso.rocha@example.com' },
+    { id: 7, contato: 'Valentina Rodrigues Castro', telefone: '(77)80246-3579', email: 'valentina.rodrigues.castro@example.com' },
+    { id: 8, contato: 'Miguel Oliveira Santos', telefone: '(88)35791-8024', email: 'miguel.oliveira.santos@example.com' },
+    { id: 9, contato: 'Laura Martins Lima', telefone: '(99)64208-7531', email: 'laura.martins.lima@example.com' },
+    { id: 10, contato: 'Davi Barbosa Gomes', telefone: '(10)75319-6420', email: 'davi.barbosa.gomes@example.com' },
+    { id: 11, contato: 'Matheus Carvalho Fernandes', telefone: '(21)90246-1537', email: 'matheus.carvalho.fernandes@example.com' },
+    { id: 12, contato: 'Giovanna Ribeiro Pereira', telefone: '(32)61537-0246', email: 'giovanna.ribeiro.pereira@example.com' },
+    { id: 13, contato: 'Pedro Castro Alves', telefone: '(43)40246-7531', email: 'pedro.castro.alves@example.com' },
+    { id: 14, contato: 'Júlia Lima Costa', telefone: '(54)83197-6240', email: 'julia.lima.costa@example.com' },
+    { id: 15, contato: 'Rafaela Sousa Cardoso', telefone: '(65)36420-9753', email: 'rafaela.sousa.cardoso@example.com' },
+    { id: 16, contato: "Arthur Oliveira Costa", telefone: '(11)23456-7890', email: 'arthur.oliveira.costa@example.com' },
+    { id: 17, contato: "Helena Pereira Almeida", telefone: '(22)87654-3210', email: 'helena.pereira.almeida@example.com' },
+    { id: 18, contato: "Bernardo Souza Santos", telefone: '(33)46802-7531', email: 'bernardo.souza.santos@example.com' },
+    { id: 19, contato: "Lara Ribeiro Ferreira", telefone: '(44)60248-9735', email: 'lara.ribeiro.ferreira@example.com' },
+    { id: 20, contato: "Thiago Gomes Lima", telefone: '(55)79130-2468', email: 'thiago.gomes.lima@example.com' },
+    { id: 21, contato: "Eduarda Rocha Cardoso", telefone: '(66)31579-4268', email: 'eduarda.rocha.cardoso@example.com' },
+    { id: 22, contato: "Daniel Castro Rodrigues", telefone: '(77)80462-3957', email: 'daniel.castro.rodrigues@example.com' },
+    { id: 23, contato: "Gabriela Santos Oliveira", telefone: '(88)37591-0426', email: 'gabriela.santos.oliveira@example.com' },
+    { id: 24, contato: "Raul Lima Martins", telefone: '(99)24680-5317', email: 'raul.lima.martins@example.com' },
+    { id: 25, contato: "Marina Mendes Silva", telefone: '(10)61953-2407', email: 'marina.mendes.silva@example.com' },
 ];
 
 const columns = [
@@ -160,10 +170,10 @@ function ConsultarContatos() {
                                             return (
                                                 <td {...cell.getCellProps()}>
                                                     <div className="d-flex justify-content-between">
-                                                        <Button variant="link" onClick={handleEditar}>
+                                                        <Button variant="link" className="p-0" onClick={handleEditar}>
                                                             <FaEdit />
                                                         </Button>
-                                                        <Button variant="link" onClick={handleExcluir}>
+                                                        <Button variant="link" className="p-0" onClick={handleExcluir}>
                                                             <FaTrash />
                                                         </Button>
                                                     </div>
@@ -181,16 +191,16 @@ function ConsultarContatos() {
                 </Table>
                 <div className="pagination">
                     <button onClick={() => previousPage()} disabled={!canPreviousPage}>
-                        {'<<'}
+                        {'<'}
                     </button>
                     <span>
                         Página{' '}
                         <strong>
-                            {pageIndex + 1} de {page.length}
+                            {pageIndex + 1}
                         </strong>{' '}
                     </span>
                     <button onClick={() => nextPage()} disabled={!canNextPage}>
-                        {'>>'}
+                        {'>'}
                     </button>
                 </div>
             </div>
