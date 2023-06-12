@@ -91,6 +91,7 @@ const CadastrarUsuario = () => {
                 setShowModalSuccess(true);
             })
             .catch(error => {
+                //console.error(error);
                 setMensagemModalAlert(error.message);
                 setShowModalAlert(true);
             });

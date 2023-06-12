@@ -86,7 +86,7 @@ const CadastrarContato = () => {
     };
 
     const cancelar = () => {
-        navigate('/home');
+        navigate('/consultar-contatos');
     };
 
     const handleCloseModalAlert = () => {
@@ -155,8 +155,7 @@ const CadastrarContato = () => {
                 setShowModalSuccess(true);
             })
             .catch(error => {
-                //console.log(error);
-                setMensagemModalAlert(error.message);
+                setMensagemModalAlert(error.response.data);
                 setShowModalAlert(true);
             });
     }

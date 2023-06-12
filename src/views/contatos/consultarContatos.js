@@ -55,7 +55,6 @@ function ConsultarContatos() {
         axios
             .get(`${url}/contacts/${usuarioLogado.id}`)
             .then((response) => {
-                console.log(response.data);
                 const data = response.data.map((obj) => ({
                     id: obj.id,
                     contato: obj.name,

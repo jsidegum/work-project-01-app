@@ -5,7 +5,7 @@ const Header = () => {
     const handleLogout = () => {
         localStorage.removeItem('_usuario_logado');
         window.location.reload();
-        console.log("Logout realizado com sucesso!");
+        //console.log("Logout realizado com sucesso!");
     };
 
     const usuarioLogado = localStorage.getItem('_usuario_logado');
