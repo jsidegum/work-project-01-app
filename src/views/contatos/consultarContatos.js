@@ -6,6 +6,8 @@ import CenteredCard from '../../components/card';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import ModalSuccess from '../../components/modalSuccess';
+import ModalAlert from '../../components/modalAlert';
 
 const columns = [
     { Header: 'ID', accessor: 'id', Filter: true },
@@ -50,6 +52,12 @@ function ConsultarContatos() {
 
     const [contatos, setContatos] = useState([]);
     const [filterInput, setFilterInput] = useState('');
+
+    const [showModalSuccess, setShowModalSuccess] = useState(false);
+    const [mensagemModalSuccess, setMensagemModalSuccess] = useState('');
+
+    const [showModalAlert, setShowModalAlert] = useState(false);
+    const [mensagemModalAlert, setMensagemModalAlert] = useState('');
 
     useEffect(() => {
         axios
@@ -108,13 +116,31 @@ function ConsultarContatos() {
         navigate('/cadastrar-contatos');
     };
 
-    const handleEditar = () => {
-        console.log('Editar');
+    const handleEditar = (id) => {
+        console.log('Editar ' + id);
     };
 
-    const handleExcluir = () => {
-        console.log('Excluir');
+    const handleExcluir = (id) => {
+        axios.delete(`${url}/contacts/${usuarioLogado.id}/${id}`)
+            .then((response) => {
+                setMensagemModalSuccess(response.data);
+                setShowModalSuccess(true);
+            })
+            .catch((error) => {
+                setMensagemModalAlert(error.message);
+                setShowModalAlert(true);
+            });
     };
+
+    const handleCloseModalAlert = () => {
+        setShowModalAlert(false);
+    };
+
+    const handleCloseModalSuccess = () => {
+        setShowModalSuccess(false);
+        window.location.reload();
+    };
+
     return (
         <CenteredCard width="55rem" title="Contatos">
 
@@ -161,10 +187,10 @@ function ConsultarContatos() {
                                             return (
                                                 <td {...cell.getCellProps()}>
                                                     <div className="d-flex justify-content-between">
-                                                        <Button variant="link" className="p-0" onClick={handleEditar}>
+                                                        <Button variant="link" className="p-0" onClick={e => handleEditar(row.original.id)}>
                                                             <FaEdit />
                                                         </Button>
-                                                        <Button variant="link" className="p-0" onClick={handleExcluir}>
+                                                        <Button variant="link" className="p-0" onClick={e => handleExcluir(row.original.id)}>
                                                             <FaTrash />
                                                         </Button>
                                                     </div>
@@ -195,6 +221,21 @@ function ConsultarContatos() {
                     </button>
                 </div>
             </div>
+
+            {showModalAlert && (
+                <ModalAlert
+                    mensagem={mensagemModalAlert}
+                    handleClose={handleCloseModalAlert}
+                />
+            )}
+
+            {showModalSuccess && (
+                <ModalSuccess
+                    mensagem={mensagemModalSuccess}
+                    handleClose={handleCloseModalSuccess}
+                />
+            )}
+
         </CenteredCard>
     );
 }
