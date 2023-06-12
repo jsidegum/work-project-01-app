@@ -13,6 +13,8 @@ const CadastrarContato = () => {
 
     const url = process.env.REACT_APP_URL;
 
+    const usuarioLogado = JSON.parse(localStorage.getItem('_usuario_logado'));
+
     const [contato, setContato] = useState('');
     const [telefone, setTelefone] = useState('');
     const [email, setEmail] = useState('');
@@ -80,7 +82,7 @@ const CadastrarContato = () => {
 
     const handleCloseModalSuccess = () => {
         setShowModalSuccess(false);
-        navigate('/home');
+        navigate('/consultar-contatos');
     };
 
     const cancelar = () => {
@@ -130,12 +132,12 @@ const CadastrarContato = () => {
         }
 
         const data = {
-            user: 1, //provisório
+            user: usuarioLogado.id,
             name: contatoSanitizado,
             cellphone: telefoneSanitizado,
             email: emailSanitizado,
             address: {
-                user: 1, //provisório
+                user: usuarioLogado.id,
                 zipCode: cepSanitizado,
                 streetAddress: logradouroSanitizado,
                 buildingNumber: numeroSanitizado,
@@ -147,13 +149,9 @@ const CadastrarContato = () => {
 
         };
 
-        console.log(data);
-
-        axios.post(url + '/contacts/1', data) //provisório
+        axios.post(`${url}/contacts/${usuarioLogado.id}`, data)
             .then(response => {
-                console.log(response);
-                // setMensagemModalSuccess(response.data);
-                setMensagemModalSuccess("Contato cadastrado com sucesso!"); //provisório
+                setMensagemModalSuccess(response.data);
                 setShowModalSuccess(true);
             })
             .catch(error => {
