@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import CenteredCard from '../../components/card';
+import CardContent from '../../components/cardContent';
 import { Form, Row, Col, Button } from 'react-bootstrap';
 import ModalAlert from '../../components/modalAlert';
 import InputMask from 'react-input-mask';
@@ -161,7 +161,7 @@ const CadastrarContato = () => {
     }
 
     return (
-        <CenteredCard width="40rem" title="Cadastrar Contato">
+        <CardContent title='Cadastro de Contato'>
             <Form>
                 <Row>
                     <Form.Group as={Col} xs={12} sm={12} controlId="formContato">
@@ -283,6 +283,7 @@ const CadastrarContato = () => {
                         </Button>
                     </Col>
                 </Row>
+                <br />
             </Form>
 
             {showModalAlert && (
@@ -298,8 +299,7 @@ const CadastrarContato = () => {
                     handleClose={handleCloseModalSuccess}
                 />
             )}
-
-        </CenteredCard>
+        </CardContent>
     );
 };
 

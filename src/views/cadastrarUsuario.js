@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import CenteredCard from '../components/card';
 import DOMPurify from 'dompurify';
 import ModalAlert from '../components/modalAlert';
 import ModalSuccess from '../components/modalSuccess';
 import axios from 'axios';
 import { aesUtil } from '../crypto/AESUtil';
+import CardCentered from '../components/cardCentered';
 
 const CadastrarUsuario = () => {
 
@@ -112,7 +112,7 @@ const CadastrarUsuario = () => {
     };
 
     return (
-        <CenteredCard title="Cadastre-se">
+        <CardCentered title='Cadastre-se' style={{ width: '350px' }}>
             <Form>
                 <Form.Group controlId="formBasicNome">
                     <Form.Label>Nome</Form.Label>
@@ -162,21 +162,24 @@ const CadastrarUsuario = () => {
                 </Button>
             </Form>
 
-            {showModalAlert && (
-                <ModalAlert
-                    mensagem={mensagemModalAlert}
-                    handleClose={handleCloseModalAlert}
-                />
-            )}
+            {
+                showModalAlert && (
+                    <ModalAlert
+                        mensagem={mensagemModalAlert}
+                        handleClose={handleCloseModalAlert}
+                    />
+                )
+            }
 
-            {showModalSuccess && (
-                <ModalSuccess
-                    mensagem={mensagemModalSuccess}
-                    handleClose={handleCloseModalSuccess}
-                />
-            )}
-
-        </CenteredCard>
+            {
+                showModalSuccess && (
+                    <ModalSuccess
+                        mensagem={mensagemModalSuccess}
+                        handleClose={handleCloseModalSuccess}
+                    />
+                )
+            }
+        </CardCentered >
     );
 };
 

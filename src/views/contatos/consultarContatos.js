@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Table, Button } from 'react-bootstrap';
 import { useTable, usePagination, useSortBy, useFilters } from 'react-table';
-import CenteredCard from '../../components/card';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import ModalSuccess from '../../components/modalSuccess';
 import ModalAlert from '../../components/modalAlert';
+import CardContent from '../../components/cardContent';
 
 const columns = [
     { Header: 'ID', accessor: 'id', Filter: true },
@@ -142,101 +142,103 @@ function ConsultarContatos() {
     };
 
     return (
-        <CenteredCard width="55rem" title="Contatos">
 
-            <div className="container mt-4">
-                <div className="d-flex justify-content-between mb-3">
-                    <Button variant="primary" onClick={adicionar}>Adicionar</Button>
-                    <div className="form-group">
-                        <input
-                            type="text"
-                            value={filterInput}
-                            onChange={handleFilterChange}
-                            placeholder="Buscar Contato"
-                            className="form-control"
-                        />
-                    </div>
-                </div>
-
-                <Table {...getTableProps()} striped bordered>
-
-                    <thead>
-                        {headerGroups.map((headerGroup) => (
-                            <tr {...headerGroup.getHeaderGroupProps()}>
-                                {headerGroup.headers.map((column) => (
-                                    <th
-                                        {...column.getHeaderProps(column.getSortByToggleProps())}
-                                        className={column.isSorted ? (column.isSortedDesc ? 'desc' : 'asc') : ''}
-                                        title=""
-                                    >
-                                        {column.render('Header')}
-                                    </th>
-                                ))}
-
-                            </tr>
-                        ))}
-                    </thead>
-
-                    <tbody {...getTableBodyProps()}>
-                        {page.map((row) => {
-                            prepareRow(row);
-                            return (
-                                <tr {...row.getRowProps()}>
-                                    {row.cells.map((cell) => {
-                                        if (cell.column.id === 'actions') {
-                                            return (
-                                                <td {...cell.getCellProps()}>
-                                                    <div className="d-flex justify-content-between">
-                                                        <Button variant="link" className="p-0" onClick={e => handleEditar(row.original.id)}>
-                                                            <FaEdit />
-                                                        </Button>
-                                                        <Button variant="link" className="p-0" onClick={e => handleExcluir(row.original.id)}>
-                                                            <FaTrash />
-                                                        </Button>
-                                                    </div>
-                                                </td>
-                                            );
-                                        }
-                                        return (
-                                            <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                                        );
-                                    })}
-                                </tr>
-                            );
-                        })}
-                    </tbody>
-                </Table>
-                <div className="pagination">
-                    <button onClick={() => previousPage()} disabled={!canPreviousPage}>
-                        {'<'}
-                    </button>
-                    <span>
-                        Página{' '}
-                        <strong>
-                            {pageIndex + 1}
-                        </strong>{' '}
-                    </span>
-                    <button onClick={() => nextPage()} disabled={!canNextPage}>
-                        {'>'}
-                    </button>
+        <CardContent title='Meus Contatos'>
+            <div className="d-flex justify-content-between mb-3">
+                <Button variant="primary" onClick={adicionar}>Adicionar</Button>
+                <div className="form-group">
+                    <input
+                        type="text"
+                        value={filterInput}
+                        onChange={handleFilterChange}
+                        placeholder="Buscar Contato"
+                        className="form-control"
+                    />
                 </div>
             </div>
 
-            {showModalAlert && (
-                <ModalAlert
-                    mensagem={mensagemModalAlert}
-                    handleClose={handleCloseModalAlert}
-                />
-            )}
+            <Table {...getTableProps()} striped bordered className="contacts-table">
 
-            {showModalSuccess && (
-                <ModalSuccess
-                    mensagem={mensagemModalSuccess}
-                    handleClose={handleCloseModalSuccess}
-                />
-            )}
+                <thead>
+                    {headerGroups.map((headerGroup) => (
+                        <tr {...headerGroup.getHeaderGroupProps()}>
+                            {headerGroup.headers.map((column) => (
+                                <th
+                                    {...column.getHeaderProps(column.getSortByToggleProps())}
+                                    className={column.isSorted ? (column.isSortedDesc ? 'desc' : 'asc') : ''}
+                                    title=""
+                                >
+                                    {column.render('Header')}
+                                </th>
+                            ))}
 
-        </CenteredCard>
+                        </tr>
+                    ))}
+                </thead>
+
+                <tbody {...getTableBodyProps()}>
+                    {page.map((row) => {
+                        prepareRow(row);
+                        return (
+                            <tr {...row.getRowProps()}>
+                                {row.cells.map((cell) => {
+                                    if (cell.column.id === 'actions') {
+                                        return (
+                                            <td {...cell.getCellProps()}>
+                                                <div className="d-flex justify-content-between">
+                                                    <Button variant="link" className="p-0" onClick={e => handleEditar(row.original.id)}>
+                                                        <FaEdit />
+                                                    </Button>
+                                                    <Button variant="link" className="p-0" onClick={e => handleExcluir(row.original.id)}>
+                                                        <FaTrash />
+                                                    </Button>
+                                                </div>
+                                            </td>
+                                        );
+                                    }
+                                    return (
+                                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                                    );
+                                })}
+                            </tr>
+                        );
+                    })}
+                </tbody>
+            </Table>
+            <div className="pagination">
+                <button onClick={() => previousPage()} disabled={!canPreviousPage}>
+                    {'<'}
+                </button>
+                <span>
+                    Página{' '}
+                    <strong>
+                        {pageIndex + 1}
+                    </strong>{' '}
+                </span>
+                <button onClick={() => nextPage()} disabled={!canNextPage}>
+                    {'>'}
+                </button>
+            </div>
+            <br />
+
+            {
+                showModalAlert && (
+                    <ModalAlert
+                        mensagem={mensagemModalAlert}
+                        handleClose={handleCloseModalAlert}
+                    />
+                )
+            }
+
+            {
+                showModalSuccess && (
+                    <ModalSuccess
+                        mensagem={mensagemModalSuccess}
+                        handleClose={handleCloseModalSuccess}
+                    />
+                )
+            }
+        </CardContent >
     );
 }
 

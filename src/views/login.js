@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Form, Button, InputGroup, FormControl } from 'react-bootstrap';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import CenteredCard from '../components/card';
 import axios from 'axios';
 import ModalAlert from '../components/modalAlert';
 import { useNavigate } from 'react-router-dom';
 import { aesUtil } from '../crypto/AESUtil';
+import CardCentered from '../components/cardCentered';
 
 const Login = () => {
     const url = process.env.REACT_APP_URL;
@@ -52,7 +52,7 @@ const Login = () => {
     };
 
     return (
-        <CenteredCard title="Faça seu Login">
+        <CardCentered title="Faça seu Login">
             <Form>
                 <Form.Group controlId="formBasicEmail">
                     <Form.Label>Email</Form.Label>
@@ -100,11 +100,11 @@ const Login = () => {
             </Form>
 
             {showModalAlert && (
-                <ModalAlert 
-					mensagem={mensagemModalAlert} 
-					handleClose={handleCloseModalAlert} />
+                <ModalAlert
+                    mensagem={mensagemModalAlert}
+                    handleClose={handleCloseModalAlert} />
             )}
-        </CenteredCard>
+        </CardCentered>
     );
 };
 
