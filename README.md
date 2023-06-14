@@ -7,6 +7,8 @@ A aplicação utiliza criptografia de ponta a ponta para garantir a segurança d
 
 A API relacionada a este projeto está disponível em: [https://github.com/DaviBrinhosa/work-project-01-api](https://github.com/DaviBrinhosa/work-project-01)
 
+<img src="/showApp.gif" style="width:700px;"/>
+
 ## Tecnologias Utilizadas
 
 - ReactJS
@@ -14,8 +16,6 @@ A API relacionada a este projeto está disponível em: [https://github.com/DaviB
 - DOMPurify
 - Axios
 - Crypto-js
-
-## Screenshots
 
 ## Desenvolvedores
 
