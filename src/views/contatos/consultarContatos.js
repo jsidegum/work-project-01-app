@@ -50,6 +50,8 @@ function ConsultarContatos() {
     const url = process.env.REACT_APP_URL;
     const usuarioLogado = JSON.parse(localStorage.getItem('_usuario_logado'));
 
+    const navigate = useNavigate();
+
     const [contatos, setContatos] = useState([]);
     const [filterInput, setFilterInput] = useState('');
 
@@ -74,7 +76,7 @@ function ConsultarContatos() {
             .catch((error) => {
                 console.log(error);
             });
-    }, []);
+    }, [url, usuarioLogado.id]);
 
     const defaultColumn = {
         Filter: DefaultColumnFilter,
@@ -110,14 +112,13 @@ function ConsultarContatos() {
         setFilterInput(value);
     };
 
-    const navigate = useNavigate();
-
     const adicionar = () => {
         navigate('/cadastrar-contatos');
     };
 
-    const handleEditar = (id) => {
-        console.log('Editar ' + id);
+    const handleEditar = (idContato) => {
+        // console.log('Editar ' + idContato);
+        navigate(`/cadastrar-contatos/${idContato}`);
     };
 
     const handleExcluir = (id) => {

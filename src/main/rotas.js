@@ -17,11 +17,12 @@ const Rotas = () => {
                 {/* Independentes de autenticação */}
                 <Route exact path="/" element={<Login />} />
                 <Route exact path="/cadastrar-usuario" element={<CadastrarUsuario />} />
+
                 {/* Dependentes de autenticação */}
                 {isUsuarioAutenticado ? (
                     <>
                         <Route exact path="/home" element={<Home />} />
-                        <Route exact path="/cadastrar-contatos" element={<CadastrarContatos />} />
+                        <Route exact path="/cadastrar-contatos/:id?" element={<CadastrarContatos />} />
                         <Route exact path="/consultar-contatos" element={<ConsultarContatos />} />
                     </>
                 ) : (

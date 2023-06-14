@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CardContent from '../../components/cardContent';
 import { Form, Row, Col, Button } from 'react-bootstrap';
@@ -8,6 +8,7 @@ import SelectMenu from '../../components/selectMenu';
 import DOMPurify from 'dompurify';
 import axios from 'axios';
 import ModalSuccess from '../../components/modalSuccess';
+import { useParams } from 'react-router-dom';
 
 const CadastrarContato = () => {
 
@@ -15,9 +16,11 @@ const CadastrarContato = () => {
 
     const usuarioLogado = JSON.parse(localStorage.getItem('_usuario_logado'));
 
+    const [idContato, setIdContato] = useState(null);
     const [contato, setContato] = useState('');
     const [telefone, setTelefone] = useState('');
     const [email, setEmail] = useState('');
+    const [idEndereco, setIdEndereco] = useState(null);
     const [cep, setCep] = useState('');
     const [logradouro, setLogradouro] = useState('');
     const [numero, setNumero] = useState('');
@@ -25,6 +28,8 @@ const CadastrarContato = () => {
     const [bairro, setBairro] = useState('');
     const [cidade, setCidade] = useState('');
     const [estado, setEstado] = useState('');
+
+    const [atualizando, setAtualizando] = useState(false);
 
     const [showModalAlert, setShowModalAlert] = useState(false);
     const [mensagemModalAlert, setMensagemModalAlert] = useState('');
@@ -74,6 +79,7 @@ const CadastrarContato = () => {
     ];
 
     const navigate = useNavigate();
+    const params = useParams();
 
     const isValidEmail = (email) => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -98,7 +104,7 @@ const CadastrarContato = () => {
         if (contatoSanitizado !== contato ||
             telefoneSanitizado !== telefone ||
             emailSanitizado !== email ||
-            cepSanitizado !== cepSanitizado ||
+            cepSanitizado !== cep ||
             logradouroSanitizado !== logradouro ||
             numeroSanitizado !== numero ||
             complementoSanitizado !== complemento ||
@@ -160,8 +166,73 @@ const CadastrarContato = () => {
             });
     }
 
+    useEffect(() => {
+        //Se for atualização de contato, o id estará na rota/url
+        if (params.id) {
+            axios
+                .get(`${url}/contacts/${usuarioLogado.id}/${params.id}`)
+                .then((response) => {
+
+                    setAtualizando(true);
+
+                    setIdContato(response.data.id);
+                    setContato(response.data.name);
+                    setTelefone(response.data.cellphone);
+                    setEmail(response.data.email);
+                    setIdEndereco(response.data.address.id);
+                    setCep(response.data.address.zipCode);
+                    setLogradouro(response.data.address.streetAddress);
+                    setNumero(response.data.address.buildingNumber);
+                    setComplemento(response.data.address.complement);
+                    setBairro(response.data.address.district);
+                    setCidade(response.data.address.city);
+                    setEstado(response.data.address.region);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        }
+    }, [url, usuarioLogado.id, params.id]);
+
+    const atualizar = () => {
+
+        if (!validarCampos()) {
+            return;
+        }
+
+        const data = {
+            id: idContato,
+            name: contatoSanitizado,
+            cellphone: telefoneSanitizado,
+            email: emailSanitizado,
+            address: {
+                id: idEndereco,
+                zipCode: cepSanitizado,
+                streetAddress: logradouroSanitizado,
+                buildingNumber: numeroSanitizado,
+                complement: complementoSanitizado,
+                district: bairroSanitizado,
+                city: cidadeSanitizado,
+                region: estado,
+            }
+        };
+
+        axios
+            .put(`${url}/contacts/${usuarioLogado.id}/${params.id}`, data)
+            .then((response) => {
+                console.log(response.data);
+                setMensagemModalSuccess(response.data);
+                setShowModalSuccess(true);
+            })
+            .catch((error) => {
+                console.log(error);
+                setMensagemModalAlert(error.response.data);
+                setShowModalAlert(true);
+            });
+    }
+
     return (
-        <CardContent title='Cadastro de Contato'>
+        <CardContent title={atualizando ? 'Atualizar Contato' : 'Cadastrar Novo Contato'} >
             <Form>
                 <Row>
                     <Form.Group as={Col} xs={12} sm={12} controlId="formContato">
@@ -275,9 +346,11 @@ const CadastrarContato = () => {
                 <br />
                 <Row>
                     <Col xs={12}>
-                        <Button variant="primary" className="mr-2" onClick={cadastrar}>
-                            Salvar
-                        </Button>
+                        {atualizando ?
+                            <Button variant="primary" className="mr-2" onClick={atualizar}> Atualizar </Button>
+                            :
+                            <Button variant="primary" className="mr-2" onClick={cadastrar}> Salvar </Button>
+                        }
                         <Button variant="secondary" onClick={cancelar}>
                             Cancelar
                         </Button>
